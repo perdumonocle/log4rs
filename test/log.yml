@@ -25,3 +25,9 @@ loggers:
     appenders:
     - file
     additive: true
+  test::b:
+    level: info
+    matched: bbb
+    appenders:
+    - file
+    additive: true

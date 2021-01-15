@@ -21,3 +21,11 @@ mod a {
         info!("a");
     }
 }
+
+mod b {
+    pub fn foo() {
+        info!("1 aaa bbb ccc");
+        info!("2 aaa ccc");
+        debug!("3 aaa bbb ccc");
+    }
+}

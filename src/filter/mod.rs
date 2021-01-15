@@ -15,6 +15,9 @@ use crate::config::Deserializable;
 #[cfg(feature = "threshold_filter")]
 pub mod threshold;
 
+#[cfg(feature = "match_string_filter")]
+pub mod match_string;
+
 /// The trait implemented by log4rs filters.
 ///
 /// Filters are associated with appenders and limit the log events that will be
