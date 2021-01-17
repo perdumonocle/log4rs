@@ -352,7 +352,7 @@ impl RawConfig {
                 config::Logger::builder()
                     .appenders(logger.appenders.clone())
                     .additive(logger.additive)
-                    .build(name.clone(), logger.level)
+                    .build(name.clone(), logger.level, logger.matched)
             })
             .collect()
     }
@@ -444,6 +444,8 @@ fn root_level_default() -> LevelFilter {
 #[serde(deny_unknown_fields)]
 struct Logger {
     level: LevelFilter,
+    #[serde(default)]
+    matched: Option<String>,
     #[serde(default)]
     appenders: Vec<String>,
     #[serde(default = "logger_additive_default")]

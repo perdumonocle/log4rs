@@ -309,6 +309,7 @@ impl AppenderBuilder {
 pub struct Logger {
     name: String,
     level: LevelFilter,
+    matched: Option<String>,
     appenders: Vec<String>,
     additive: bool,
 }
@@ -332,6 +333,11 @@ impl Logger {
     /// Returns the minimum level of log messages that the logger will accept.
     pub fn level(&self) -> LevelFilter {
         self.level
+    }
+
+    /// Returns substring of log messages that the logger will accept.
+    pub fn matched(&self) -> Option<String> {
+        self.matched
     }
 
     /// Returns the list of names of appenders that will be attached to the logger.
@@ -379,13 +385,14 @@ impl LoggerBuilder {
     }
 
     /// Consumes the `LoggerBuilder`, returning the `Logger`.
-    pub fn build<T>(self, name: T, level: LevelFilter) -> Logger
+    pub fn build<T>(self, name: T, level: LevelFilter, matched: Option<String>) -> Logger
     where
         T: Into<String>,
     {
         Logger {
             name: name.into(),
             level,
+            matched,
             appenders: self.appenders,
             additive: self.additive,
         }

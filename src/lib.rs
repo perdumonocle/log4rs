@@ -213,19 +213,20 @@ type FnvHashMap<K, V> = HashMap<K, V, BuildHasherDefault<FnvHasher>>;
 #[derive(Debug)]
 struct ConfiguredLogger {
     level: LevelFilter,
+    matched: Option<String>,
     appenders: Vec<usize>,
     children: FnvHashMap<String, ConfiguredLogger>,
 }
 
 impl ConfiguredLogger {
-    fn add(&mut self, path: &str, mut appenders: Vec<usize>, additive: bool, level: LevelFilter) {
+    fn add(&mut self, path: &str, mut appenders: Vec<usize>, additive: bool, level: LevelFilter, matched: Option<String>) {
         let (part, rest) = match path.find("::") {
             Some(idx) => (&path[..idx], &path[idx + 2..]),
             None => (path, ""),
         };
 
         if let Some(child) = self.children.get_mut(part) {
-            child.add(rest, appenders, additive, level);
+            child.add(rest, appenders, additive, level, matched);
             return;
         }
 
@@ -236,16 +237,18 @@ impl ConfiguredLogger {
 
             ConfiguredLogger {
                 level,
+                matched,
                 appenders,
                 children: FnvHashMap::default(),
             }
         } else {
             let mut child = ConfiguredLogger {
                 level: self.level,
+                matched: self.matched.clone(),
                 appenders: self.appenders.clone(),
                 children: FnvHashMap::default(),
             };
-            child.add(rest, appenders, additive, level);
+            child.add(rest, appenders, additive, level, matched);
             child
         };
 
@@ -374,7 +377,7 @@ impl SharedLogger {
                     .iter()
                     .map(|appender| appender_map[&**appender])
                     .collect();
-                root.add(logger.name(), appenders, logger.additive(), logger.level());
+                root.add(logger.name(), appenders, logger.additive(), logger.level(), logger.matched());
             }
 
             root

@@ -5,4 +5,5 @@ authors = ["Steven Fackler <sfackler@gmail.com>"]
 
 [dependencies]
 log = "0.4.0"
-log4rs = { path = ".." }
+#log4rs = { path = ".." }
+log4rs = { git = "https://github.com/perdumonocle/log4rs.git" }
